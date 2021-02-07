@@ -6,4 +6,7 @@ import tech.manager.entity.EmployeeEntity;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<EmployeeEntity, Integer> {
+
+    void deleteById(int id);
+
 }
