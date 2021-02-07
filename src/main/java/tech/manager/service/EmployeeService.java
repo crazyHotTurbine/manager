@@ -1,13 +1,14 @@
 package tech.manager.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.stereotype.Service;
+import tech.manager.dto.Employee;
 import tech.manager.entity.EmployeeEntity;
 import tech.manager.exception.EmployeeNotFoundException;
 import tech.manager.repository.EmployeeRepository;
 
 import java.util.Collection;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -17,6 +18,7 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
 
     public EmployeeEntity add(EmployeeEntity emp) {
+        injectCode(emp);
         return employeeRepository.save(emp);
     }
 
@@ -24,22 +26,22 @@ public class EmployeeService {
         emp.setEmployeeCode(UUID.randomUUID().toString());
     }
 
-    private Collection<EmployeeEntity> findAll() {
+    public Collection<EmployeeEntity> findAll() {
         return employeeRepository.findAll();
     }
 
-    private EmployeeEntity findById(int id) {
+    public EmployeeEntity findById(int id) {
         return employeeRepository.findById(id)
-                .orElseThrow(
-                        () -> new EmployeeNotFoundException(String.format("Did not find EmployeeEntity with ID = %s", id))
-                );
+                .orElseThrow(() -> new EmployeeNotFoundException("Did not find EmployeeEntity with ID = " + id));
     }
 
-    private EmployeeEntity update(EmployeeEntity emp) {
-        return employeeRepository.save(emp);
+    public Employee update(Employee emp) {
+        val findEntity = findById(emp.getId());
+        EmployeeEntity.update(findEntity, emp);
+        return Employee.toDto(employeeRepository.save(findEntity));
     }
 
-    private void delete(int id) {
+    public void delete(int id) {
         employeeRepository.deleteById(id);
     }
 

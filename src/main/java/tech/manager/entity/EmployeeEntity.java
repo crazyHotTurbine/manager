@@ -1,9 +1,7 @@
 package tech.manager.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import tech.manager.dto.Employee;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,6 +12,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class EmployeeEntity implements Serializable {
 
     @Id
@@ -37,4 +36,24 @@ public class EmployeeEntity implements Serializable {
 
     @Column(name = "employee_code", nullable = false)
     private String employeeCode;
+
+    public static EmployeeEntity create(Employee emp) {
+        return EmployeeEntity.builder()
+                .name(emp.getName())
+                .email(emp.getEmail())
+                .jobTitle(emp.getJobTitle())
+                .phone(emp.getPhone())
+                .imageUrl(emp.getImageUrl())
+                .employeeCode(emp.getEmployeeCode())
+                .build();
+    }
+
+    public static void update(EmployeeEntity entity, Employee emp) {
+        entity.setName(emp.getName());
+        entity.setEmail(emp.getEmail());
+        entity.setJobTitle(emp.getJobTitle());
+        entity.setPhone(emp.getPhone());
+        entity.setImageUrl(emp.getImageUrl());
+        entity.setEmployeeCode(emp.getEmployeeCode());
+    }
 }
